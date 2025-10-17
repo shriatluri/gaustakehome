@@ -79,8 +79,8 @@ Deliver a 0→1 feature that outputs **insightful, explainable, actionable** int
 - Title: **Thesis**
 - Ticker input + “Analyze” button
 - Two cards:
-  - **Catalyst Thesis** 💡
-  - **Risk Thesis** ⚠️
+  - **Catalyst Thesis**
+  - **Risk Thesis**
 - Loading state; each bullet may include a “View source” link
 
 ---
@@ -199,17 +199,35 @@ uvicorn app:app --reload --port 8080
 
 ---
 
-## 📁 File Skeleton (suggested)
+## 📁 File Skeleton
 
 ```
 /thesis
-  /api
-    app.py                # FastAPI server
+  /backend
+    app.py                # Main FastAPI server - all routes and logic
+    data_fetcher.py       # Fetch yfinance, RSS news, Twitter data
+    llm_prompts.py        # Build catalyst and risk prompts for OpenAI
     requirements.txt
-  /web
+    .env.example
+  /frontend
+    /src
+      App.tsx             # Main React component
+      components/
+        TickerInput.tsx   # Input field + Analyze button
+        CatalystCard.tsx  # Display catalyst bullets
+        RiskCard.tsx      # Display risk bullets
+      api.ts              # API calls to backend
+      types.ts            # TypeScript types
     package.json
-    src/App.tsx           # React UI
+    tailwind.config.js
   README.md
   THESIS_SPEC.md          # this file
   .env.example            # OPENAI_API_KEY, X_BEARER
 ```
+
+**Why this works:**
+- **`app.py`** - Everything in one file for MVP (routes, data fetching, LLM calls)
+- **`data_fetcher.py`** - All external API calls (yfinance, RSS, Twitter) in one place
+- **`llm_prompts.py`** - Just the prompt templates and LLM logic
+- **Frontend** - 3 main components + API client, easy to understand
+- **No over-engineering** - Each file has a clear, single purpose
