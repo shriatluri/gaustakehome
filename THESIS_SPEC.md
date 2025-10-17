@@ -120,7 +120,7 @@ Volatility/Beta: beta={BETA}, last_{DAYS}_day_change={PCT}%
 |------------|------------------------------------------|
 | Frontend   | React + Tailwind                         |
 | Backend    | **FastAPI (Python)**                     |
-| LLM        | OpenAI GPT‑4 (key provided separately)   |
+| LLM        | Anthropic 4.5-Sonnet-API (key provided separately)   |
 | Data       | **yfinance**, **X (Twitter) API v2**, **RSS (Google News + Reuters)** |
 | Hosting    | Local / Vercel (frontend) + Render/Fly (API) |
 
@@ -199,30 +199,26 @@ uvicorn app:app --reload --port 8080
 
 ---
 
-## 📁 File Skeleton
-
+### File Structure
 ```
-/thesis
-  /backend
-    app.py                # Main FastAPI server - all routes and logic
-    data_fetcher.py       # Fetch yfinance, RSS news, Twitter data
-    llm_prompts.py        # Build catalyst and risk prompts for OpenAI
-    requirements.txt
-    .env.example
-  /frontend
-    /src
-      App.tsx             # Main React component
-      components/
-        TickerInput.tsx   # Input field + Analyze button
-        CatalystCard.tsx  # Display catalyst bullets
-        RiskCard.tsx      # Display risk bullets
-      api.ts              # API calls to backend
-      types.ts            # TypeScript types
-    package.json
-    tailwind.config.js
-  README.md
-  THESIS_SPEC.md          # this file
-  .env.example            # OPENAI_API_KEY, X_BEARER
+/backend
+  app.py              # Main FastAPI server - all routes and core logic
+  data_fetcher.py     # External API calls (yfinance, RSS, Twitter)
+  llm_prompts.py      # Prompt templates and Claude API integration
+  requirements.txt
+  .env.example
+
+/frontend
+  /src
+    App.tsx           # Main React component
+    components/
+      TickerInput.tsx
+      CatalystCard.tsx
+      RiskCard.tsx
+    api.ts            # Backend API client
+    types.ts
+  package.json
+  tailwind.config.js
 ```
 
 **Why this works:**
