@@ -1,0 +1,23 @@
+# Web framework
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+
+# Data fetching
+yfinance==0.2.66
+feedparser==6.0.10
+requests==2.31.0
+
+# Date/time utilities
+python-dateutil==2.8.2
+
+# LLM integration
+anthropic==0.71.0
+
+# Retry logic for API calls
+tenacity==8.2.3
+
+# CORS middleware
+python-multipart==0.0.6
+
+# Environment variables
+python-dotenv==1.0.0
