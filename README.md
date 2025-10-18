@@ -2,7 +2,72 @@
 
 > Real-time sentiment and risk analysis for any stock ticker, powered by Claude 3.5 Sonnet and multi-source data aggregation.
 
-**Live Demo**: https://gaus-thesis.vercel.app/
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Python 3.9+
+- Node.js 18+
+- [Anthropic API key](https://console.anthropic.com/)
+- [Twitter API v2 Bearer Token](https://developer.twitter.com/en/portal/dashboard) (optional)
+
+### Backend Setup
+
+1. **Clone the repository**
+   ```bash
+   git clone <your-repo-url>
+   cd gaustakehome/backend
+   ```
+
+2. **Install Python dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Set up environment variables**
+   ```bash
+   cp .env.example .env
+   ```
+
+   Edit `.env` and add your API keys:
+   ```
+   ANTHROPIC_API_KEY=sk-ant-...
+   X_BEARER=your_twitter_bearer_token  # Optional
+   ```
+
+4. **Run the backend server**
+   ```bash
+   uvicorn app:app --reload --port 8080
+   ```
+
+   Backend will be available at `http://localhost:8080`
+
+### Frontend Setup
+
+1. **Navigate to frontend directory**
+   ```bash
+   cd ../frontend
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Run the development server**
+   ```bash
+   npm run dev
+   ```
+
+   Frontend will be available at `http://localhost:5173`
+
+### Usage
+
+1. Open `http://localhost:5173` in your browser
+2. Enter a stock ticker (e.g., `AAPL`, `TSLA`, `NVDA`)
+3. Select a time period (1D, 5D, 1M, YTD)
+4. Click "Analyze" to get AI-powered insights
 
 ---
 

@@ -21,6 +21,3 @@ python-multipart==0.0.6
 
 # Environment variables
 python-dotenv==1.0.0
-
-# Serverless adapter for Vercel
-mangum==0.17.0
