@@ -1,9 +1,9 @@
 """
 Vercel serverless function entry point
 """
+from mangum import Mangum
 from app import app
 
-# Export the FastAPI app directly for Vercel's ASGI support
-# Vercel's Python runtime natively supports ASGI applications
-handler = app
+# Wrap FastAPI app with Mangum for Vercel serverless compatibility
+handler = Mangum(app, lifespan="off")
 
