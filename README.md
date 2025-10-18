@@ -1,10 +1,10 @@
-# Gaus: Thesis - AI-Powered Stock Analysis Platform
+# Gaus: Thesis - Sentiment + Risk Analysis
 
-> Real-time sentiment and risk analysis for any stock ticker, powered by Claude 3.5 Sonnet and multi-source data aggregation.
+> Real-time sentiment and risk analysis for any stock ticker
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - Python 3.9+
@@ -71,7 +71,7 @@
 
 ---
 
-## 🎯 What It Does
+## What It Does
 
 Gaus: Thesis is an intelligent stock analysis tool that answers two critical questions every investor asks:
 
@@ -82,11 +82,11 @@ Simply enter a ticker (e.g., `AAPL`, `TSLA`, `NVDA`) and get AI-generated insigh
 
 ---
 
-## ✨ Features Built
+## Features Built
 
 ### Core Functionality
 
-#### 📊 **Multi-Source Data Aggregation**
+#### **Multi-Source Data Aggregation**
 - **Price Data & Metrics** (via yfinance)
   - Current price, historical price, % change
   - Valuation metrics: P/E ratio, Forward P/E, P/B ratio
@@ -101,7 +101,7 @@ Simply enter a ticker (e.g., `AAPL`, `TSLA`, `NVDA`) and get AI-generated insigh
   - Sentiment signals from likes/retweets
   - Rate-limit-aware implementation for free tier
 
-#### 🤖 **LLM-Powered Analysis**
+#### **LLM-Powered Analysis**
 - **Catalyst Thesis Generation**
   - AI identifies 3-5 key reasons for price movement
   - Citations link back to specific news sources
@@ -116,7 +116,7 @@ Simply enter a ticker (e.g., `AAPL`, `TSLA`, `NVDA`) and get AI-generated insigh
   - Algorithmic scoring based on volatility, valuation, and sentiment
   - Visual color coding (green/yellow/red)
 
-#### 🎨 **Modern, Responsive UI**
+#### **Modern, Responsive UI**
 - **Clean, Professional Design**
   - Dark mode toggle with system preference detection
   - Smooth transitions and animations
@@ -132,7 +132,7 @@ Simply enter a ticker (e.g., `AAPL`, `TSLA`, `NVDA`) and get AI-generated insigh
   - "Multiple compression" → "price dropping"
   - Toggle between expert and beginner language
 
-#### 🔧 **Technical Features**
+#### **Technical Features**
 - **RESTful API Design**
   - FastAPI backend with automatic OpenAPI docs
   - Type-safe request/response handling
@@ -153,7 +153,7 @@ Simply enter a ticker (e.g., `AAPL`, `TSLA`, `NVDA`) and get AI-generated insigh
 
 ---
 
-## 🚀 Future Features (Roadmap)
+## Future Features (Roadmap)
 
 ### 1. **AI Stock Chatbot - "Ask Gaus"**
 **Why it's powerful:** Move beyond static analysis to conversational intelligence.
@@ -238,20 +238,15 @@ Simply enter a ticker (e.g., `AAPL`, `TSLA`, `NVDA`) and get AI-generated insigh
   - "Is this bullish or bearish?"
 - **Historical Comparison**: "How did similar 8-Ks affect stock price?"
 
-**Technical approach:**
-- SEC EDGAR API polling (or webhook if available)
-- LLM with legal/financial context for summarization
-- Historical backtesting engine to measure impact patterns
-
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Backend
 | Technology | Purpose |
 |-----------|---------|
 | **FastAPI** | High-performance Python API framework |
-| **Claude 3.5 Sonnet** | LLM for analysis and reasoning |
+| **Claude 4.0 Sonnet** | LLM for analysis and reasoning |
 | **yfinance** | Stock price and fundamental data |
 | **feedparser** | RSS parsing for news feeds |
 | **requests + BeautifulSoup** | Custom web scraping (fallback) |
@@ -269,13 +264,12 @@ Simply enter a ticker (e.g., `AAPL`, `TSLA`, `NVDA`) and get AI-generated insigh
 | **React Hooks** | State management and side effects |
 
 ### Infrastructure
-- **Vercel** (Serverless deployment for both frontend and backend)
 - **GitHub Actions** (Automatic deployments on push)
 - **Environment Variables** (Secure API key management)
 
 ---
 
-## 📐 Architecture
+## Architecture
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
@@ -318,12 +312,12 @@ Simply enter a ticker (e.g., `AAPL`, `TSLA`, `NVDA`) and get AI-generated insigh
 
 ---
 
-## 🧗 Technical Challenges & Solutions
+## Technical Challenges & Solutions
 
 ### Challenge 1: News API Limitations
 **Problem:** Twitter's free tier allows only 100 reads/month. Traditional financial news APIs (NewsAPI, Finnhub) have restrictive free tiers or lack specificity.
 
-**Solution:** Built a custom **multi-source RSS aggregator**:
+**Solution:** Built a custom multi-source RSS aggregator:
 - Google News RSS (`news.google.com/rss/search?q=TICKER+when:7d`)
 - Reuters business/tech RSS feeds (parsed and filtered by ticker mentions)
 - Implemented deduplication logic to avoid redundant articles
@@ -343,9 +337,9 @@ Simply enter a ticker (e.g., `AAPL`, `TSLA`, `NVDA`) and get AI-generated insigh
 ```
 
 **Initial attempts:**
-- ❌ Direct prompting → Inconsistent formats (sometimes numbered, sometimes no sources)
-- ❌ JSON mode → Claude 3.5 doesn't support strict JSON output
-- ❌ Few-shot examples → Worked 70% of the time, but citations were unreliable
+- Direct prompting → Inconsistent formats (sometimes numbered, sometimes no sources)
+- JSON mode → Claude 4.0 doesn't support strict JSON output
+- Few-shot examples → Worked 70% of the time, but citations were unreliable
 
 **Solution:** Iterative prompt engineering with **explicit formatting rules**:
 ```python
@@ -416,117 +410,8 @@ Focus on available metrics like beta or market cap.
 - After: ~15k tokens (10 articles × ~1.5k tokens)
 - **90% reduction, zero loss in quality** (tested against human analysis)
 
----
 
-### Challenge 5: Async Data Fetching Performance
-**Problem:** Sequential API calls were slow:
-```
-yfinance (2s) → Google News (3s) → Reuters (5s) → Twitter (2s) = 12 seconds total
-```
-
-**Solution:** Concurrent fetching with `asyncio` (considered) vs. synchronous (implemented):
-
-**Why synchronous?**
-- yfinance and feedparser are **synchronous libraries** (no async support)
-- Converting to async would require threading/multiprocessing complexity
-- For MVP, 12 seconds is acceptable (most hedge funds wait hours for analysis)
-
-**Future optimization:**
-- Use `aiohttp` + `asyncio.gather()` for truly parallel fetching
-- Implement caching layer (Redis) for frequently queried tickers
-- Estimated improvement: **12s → 5s**
-
----
-
-### Challenge 6: CORS and Cross-Origin Deployment
-**Problem:** Local frontend (`localhost:5173`) couldn't talk to deployed backend (`thesis-rosy.vercel.app`) due to CORS restrictions.
-
-**Solution:** Configured FastAPI CORS middleware:
-```python
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Permissive for demo; restrict in production
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-```
-
-**Security note:** In production, would restrict `allow_origins` to specific domains.
-
----
-
-### Challenge 7: Vercel Serverless Cold Starts
-**Problem:** First request to deployed backend took **15+ seconds** (cold start).
-
-**Investigation:**
-- Vercel spins down serverless functions after inactivity
-- Python imports (yfinance, anthropic) are slow on cold start
-
-**Solution:** Serverless handler optimization:
-```python
-# backend/index.py
-from app import app
-handler = app  # Export FastAPI app for Vercel
-```
-
-**Future optimization:**
-- Keep functions warm with a cron job (ping every 5 minutes)
-- Use Vercel Edge Functions for <50ms cold starts (but Python not supported yet)
-- Cache heavy imports with `importlib.util.LazyLoader`
-
----
-
-### Challenge 8: Twitter API Rate Limiting
-**Problem:** Twitter's free tier allows **100 reads/month**. Each analysis uses 1 read. If app goes viral, rate limits hit immediately.
-
-**Solution:** Rate-aware implementation:
-1. **Graceful degradation**: If Twitter returns 429, continue analysis without tweets
-2. **Conservative limits**: Only fetch 1 tweet per query (vs. 10)
-3. **User messaging**: "Limited social sentiment data" warning
-
-**Future solution:**
-- Upgrade to Twitter Basic ($100/mo for 10k reads)
-- Alternative: Scrape Reddit's r/wallstreetbets or StockTwits
-
----
-
-### Challenge 9: Date Handling for YTD (Year-to-Date)
-**Problem:** YTD is not a fixed number of days; it depends on current date.
-
-**Example:** On March 15, 2025 → YTD = 74 days
-
-**Solution:** Dynamic calculation:
-```typescript
-if (days === -1) {  // -1 is sentinel value for YTD
-  const startOfYear = new Date(new Date().getFullYear(), 0, 1);
-  days = Math.floor((Date.now() - startOfYear.getTime()) / (1000 * 60 * 60 * 24));
-}
-```
-
----
-
-### Challenge 10: Financial Jargon Simplification
-**Problem:** LLM outputs terms like "multiple compression" and "P/E ratio" that beginners don't understand.
-
-**Solution:** Client-side text replacement with **financial term dictionary**:
-```typescript
-const replacements = {
-  'P/E ratio': 'price-to-earnings (how expensive the stock is)',
-  'multiple compression': 'price dropping',
-  'valuation stretch': 'high stock price',
-  // 30+ terms mapped
-};
-```
-
-**Implementation:**
-- Real-time replacement with toggle button ("Beginner Mode")
-- Original text preserved in data (no LLM re-prompting needed)
-- Result: Accessible to non-finance users without sacrificing accuracy
-
----
-
-## 📂 Project Structure
+## Project Structure
 
 ```
 gaustakehome/
@@ -566,7 +451,7 @@ gaustakehome/
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 **Quickstart:** See [INSTRUCTIONS.md](INSTRUCTIONS.md) for detailed setup.
 
@@ -586,98 +471,3 @@ npm run dev
 
 Visit `http://localhost:5173` and analyze any ticker!
 
----
-
-## 🌐 Live Deployment
-
-- **Frontend**: [thesis-frontend.vercel.app](https://thesis-frontend.vercel.app)
-- **Backend API**: [thesis-rosy.vercel.app](https://thesis-rosy.vercel.app)
-
-Auto-deploys on every `git push` to `main`.
-
----
-
-## 📊 API Documentation
-
-### `GET /analyze`
-
-**Parameters:**
-- `ticker` (required): Stock ticker symbol (e.g., "AAPL")
-- `days` (required): Number of days to analyze (1, 5, 30, or YTD)
-
-**Response:**
-```json
-{
-  "ticker": "AAPL",
-  "company_name": "Apple Inc.",
-  "current_price": 175.43,
-  "price_change_pct": 2.86,
-  "risk_score": 2,
-  "catalyst_thesis": [
-    {
-      "text": "Apple secured exclusive Formula One US streaming rights...",
-      "sources": ["Bloomberg", "Los Angeles Times"]
-    }
-  ],
-  "risk_thesis": [
-    "Extreme valuation stretch with P/E ratio of 57x..."
-  ],
-  "data_sources": {
-    "news_articles": 100,
-    "tweets": 18
-  }
-}
-```
-
-Interactive API docs available at `/docs` when running locally.
-
----
-
-## 🧪 Testing
-
-**Manual Testing Checklist:**
-- [ ] High volatility stock (TSLA, NVDA)
-- [ ] Stable blue chip (AAPL, MSFT, GOOG)
-- [ ] Recent earnings report (find on earnings calendar)
-- [ ] Invalid ticker (should show 404)
-- [ ] Different time periods (1D, 5D, 1M, YTD)
-- [ ] Dark mode toggle
-- [ ] Mobile responsive layout
-
-**Automated Testing (Future):**
-- Unit tests for data parsing (`pytest`)
-- Integration tests for API endpoints
-- E2E tests for frontend (`Playwright`)
-
----
-
-## 🎓 Key Learnings
-
-1. **LLMs are powerful but need guardrails**: Prompt engineering is 50% of the work
-2. **Free tier APIs are viable**: With smart rate limiting and caching, can serve 1000s of users
-3. **Defensive programming is critical**: Always assume data is missing or malformed
-4. **User experience trumps feature count**: A polished MVP > buggy feature-rich app
-5. **Deployment should be automatic**: Vercel's git integration saved hours of DevOps work
-
----
-
-## 🙏 Acknowledgments
-
-Built as a take-home assignment for **Gaus Capital**. Special thanks to Daniel for the opportunity to work on such an interesting problem!
-
-**APIs & Libraries:**
-- [Anthropic](https://anthropic.com) for Claude API
-- [yfinance](https://github.com/ranaroussi/yfinance) for financial data
-- [FastAPI](https://fastapi.tiangolo.com/) for backend framework
-- [Vercel](https://vercel.com) for deployment infrastructure
-
----
-
-## 📧 Contact
-
-**Shri Atluri**  
-[GitHub](https://github.com/shriatluri) • [Email](mailto:atluri5@purdue.edu)
-
----
-
-**Made with ☕ and Claude 3.5 Sonnet**
