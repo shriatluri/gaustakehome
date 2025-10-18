@@ -15,14 +15,13 @@ interface TickerInputProps {
 const TIME_PERIODS = [
   { label: '1D', days: 1 },
   { label: '5D', days: 5 },
-  { label: '1W', days: 7 },
   { label: '1M', days: 30 },
   { label: 'YTD', days: -1 }, // Special value for YTD
 ];
 
 export default function TickerInput({ onAnalyze, isLoading, isDarkMode }: TickerInputProps) {
   const [ticker, setTicker] = useState('');
-  const [selectedPeriod, setSelectedPeriod] = useState(7); // Default to 1W
+  const [selectedPeriod, setSelectedPeriod] = useState(5); // Default to 5D
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
