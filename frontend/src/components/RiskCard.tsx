@@ -142,7 +142,7 @@ export default function RiskCard({ bullets, riskScore, isDarkMode }: RiskCardPro
         
         {/* Risk Score Badge */}
         <div className={`flex items-center gap-2 px-4 py-2 rounded-lg border-2 ${getScoreColor(riskScore)}`}>
-          <div className="text-3xl font-bold">{riskScore}</div>
+          <div className="text-xl font-bold">{riskScore}</div>
           <div className="text-sm font-semibold">{getRiskLabel(riskScore)}</div>
         </div>
       </div>

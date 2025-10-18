@@ -123,8 +123,8 @@ export default function CatalystCard({ bullets, priceChange, days, isDarkMode }:
               ? 'border-red-600 bg-red-900/30 text-red-400'
               : 'border-red-500 bg-red-50 text-red-700'
         }`}>
-          <div className="text-3xl font-bold">{priceIcon}</div>
-          <div className="text-3xl font-bold">{Math.abs(priceChange).toFixed(2)}%</div>
+          <div className="text-xl font-bold">{priceIcon}</div>
+          <div className="text-xl font-bold">{Math.abs(priceChange).toFixed(2)}%</div>
         </div>
       </div>
 
