@@ -37,8 +37,8 @@
    ```
 
 4. **Run the backend server**
-   ```bash
-   uvicorn app:app --reload --port 8080
+   ```
+   python app.py
    ```
 
    Backend will be available at `http://localhost:8080`
