@@ -165,7 +165,17 @@ def fetch_twitter_mentions(ticker: str, bearer_token: str, max_results: int = 10
         }
 
         headers = {"Authorization": f"Bearer {bearer_token}"}
+
+        # DEBUG: Log the request details
+        logger.info(f"[X API] Request URL: {url}")
+        logger.info(f"[X API] Query: {query}")
+        logger.info(f"[X API] Max results: {params['max_results']}")
+
         response = requests.get(url, params=params, headers=headers)
+
+        # DEBUG: Log the response status and content
+        logger.info(f"[X API] Response status: {response.status_code}")
+        logger.info(f"[X API] Response body: {response.text[:500]}")  # First 500 chars
 
         if response.status_code != 200:
             logger.error(f"Twitter API error: {response.status_code} - {response.text}")
@@ -177,18 +187,25 @@ def fetch_twitter_mentions(ticker: str, bearer_token: str, max_results: int = 10
         if "data" in data:
             for tweet in data["data"]:
                 metrics = tweet.get("public_metrics", {})
+                tweet_id = tweet["id"]
+                tweet_url = f"https://x.com/i/status/{tweet_id}"
+
                 tweets.append({
                     "text": tweet["text"],
                     "created_at": tweet["created_at"],
                     "likes": metrics.get("like_count", 0),
                     "retweets": metrics.get("retweet_count", 0),
                     "author_id": tweet.get("author_id"),
-                    "tweet_id": tweet["id"]
+                    "tweet_id": tweet_id,
+                    "tweet_url": tweet_url
                 })
+
+                # DEBUG: Log each tweet URL found
+                logger.info(f"[X API] Found tweet URL: {tweet_url}")
 
             tweets.sort(key=lambda t: t["likes"] + t["retweets"], reverse=True)
 
-        logger.info(f"Found {len(tweets)} tweets for {ticker}")
+        logger.info(f"[X API] Total tweets found: {len(tweets)}, returning: {min(len(tweets), max_results)}")
         return tweets[:max_results]  # Return only requested amount
     except Exception as e:
         logger.error(f"Error fetching Twitter mentions for {ticker}: {str(e)}")

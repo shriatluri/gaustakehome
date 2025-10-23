@@ -2,6 +2,7 @@ import type { AnalysisResponse } from './types';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
 
+// Communication between frontend and backend
 export async function analyzeTicker(
   ticker: string,
   days: number = 7

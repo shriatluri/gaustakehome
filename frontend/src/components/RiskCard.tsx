@@ -5,14 +5,16 @@
  */
 
 import { useState } from 'react';
+import type { Tweet } from '../types';
 
 interface RiskCardProps {
   bullets: string[];   // Array of risk bullet points from LLM
   riskScore: number;   // Risk score from 1-10
   isDarkMode: boolean; // Dark mode state
+  tweets: Tweet[];     // Array of tweets used in analysis
 }
 
-export default function RiskCard({ bullets, riskScore, isDarkMode }: RiskCardProps) {
+export default function RiskCard({ bullets, riskScore, isDarkMode, tweets }: RiskCardProps) {
   const [showTLDR, setShowTLDR] = useState(false);
   
   // Determine color based on risk score
@@ -219,6 +221,64 @@ export default function RiskCard({ bullets, riskScore, isDarkMode }: RiskCardPro
         }`}>
           No risk analysis available
         </p>
+      )}
+
+      {/* Twitter/X Sentiment Section */}
+      {tweets && tweets.length === 0 && (
+        <p className={`italic transition-colors ${
+          isDarkMode ? 'text-gray-500' : 'text-gray-500'
+        }`}>
+          No tweets used in sentiment analysis
+        </p>
+      )}
+      {tweets && tweets.length > 0 && (
+        <div className={`mt-6 pt-6 border-t transition-colors ${
+          isDarkMode ? 'border-gray-700' : 'border-gray-200'
+        }`}>
+          <h3 className={`text-lg font-semibold mb-3 transition-colors ${
+            isDarkMode ? 'text-white' : 'text-gray-800'
+          }`}>
+            Social Sentiment
+          </h3>
+          <p className={`text-sm mb-3 transition-colors ${
+            isDarkMode ? 'text-gray-400' : 'text-gray-600'
+          }`}>
+            Top tweet used in sentiment analysis:
+          </p>
+          {tweets.map((tweet, index) => (
+            <div key={index} className={`rounded-lg p-4 border transition-colors ${
+              isDarkMode
+                ? 'bg-gray-800/50 border-gray-700'
+                : 'bg-gray-50 border-gray-200'
+            }`}>
+              <p className={`text-sm mb-3 leading-relaxed transition-colors ${
+                isDarkMode ? 'text-gray-300' : 'text-gray-700'
+              }`}>
+                {tweet.text}
+              </p>
+              <div className="flex items-center justify-between">
+                <div className={`flex gap-4 text-xs transition-colors ${
+                  isDarkMode ? 'text-gray-400' : 'text-gray-500'
+                }`}>
+                  <span>❤️ {tweet.likes}</span>
+                  <span>🔄 {tweet.retweets}</span>
+                </div>
+                <a
+                  href={tweet.tweet_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`text-xs font-semibold px-3 py-1 rounded-md transition-colors ${
+                    isDarkMode
+                      ? 'bg-blue-900/30 text-blue-400 hover:bg-blue-900/50'
+                      : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
+                  }`}
+                >
+                  View on X →
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );

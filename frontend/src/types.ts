@@ -21,6 +21,7 @@ export interface Tweet {
   retweets: number;
   author_id: string;
   tweet_id: string;
+  tweet_url: string;
 }
 
 // Price and valuation data

@@ -24,6 +24,7 @@ function App() {
   /**
    * Handle ticker analysis request
    * Called when user clicks "Analyze" button
+   * Error handling is done in the api.ts file
    */
   const handleAnalyze = async (ticker: string, days: number) => {
     // Reset state
@@ -157,7 +158,7 @@ function App() {
               />
 
               {/* Risk card */}
-              <RiskCard bullets={data.risk_thesis} riskScore={data.risk_score} isDarkMode={isDarkMode} />
+              <RiskCard bullets={data.risk_thesis} riskScore={data.risk_score} isDarkMode={isDarkMode} tweets={data.tweets} />
             </div>
 
             {/* Data sources footer */}

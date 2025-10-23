@@ -10,6 +10,7 @@ This module handles all LLM-related logic:
 from anthropic import Anthropic
 from typing import Dict, List
 import logging
+import re
 
 logger = logging.getLogger(__name__)
 
@@ -83,9 +84,10 @@ Catalyst Thesis (3-5 bullets with citations):"""
             messages=[{"role": "user", "content": prompt}]
         )
 
+        # actual response from the LLM
         thesis_text = response.content[0].text.strip()
 
-        # Extract bullets with source citations
+        # Extract bullets with source citations - clean the response for the format that we want
         bullets_with_sources = []
         for line in thesis_text.split("\n"):
             line = line.strip()
@@ -93,11 +95,10 @@ Catalyst Thesis (3-5 bullets with citations):"""
                 clean_line = line.lstrip("-•").lstrip("0123456789.").strip()
                 if clean_line:
                     # Extract source citations [1], [2], etc.
-                    import re
                     citations = re.findall(r'\[(\d+)\]', clean_line)
                     # Remove citations from text
                     text_without_citations = re.sub(r'\[\d+\]', '', clean_line).strip()
-
+                    
                     # Build sources list
                     sources = []
                     for cite_num in citations:
